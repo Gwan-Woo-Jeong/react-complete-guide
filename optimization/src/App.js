@@ -5,6 +5,7 @@ import DemoOutput from "./components/Demo/DemoOutput";
 
 function App() {
   const [showParagraph, setShowParagraph] = useState(false);
+  const [allowToggle, setAllowToggle] = useState(false);
 
   console.log("APP RUNNING");
 
@@ -17,13 +18,25 @@ function App() {
   */
 
   const toggleParagraphHandler = useCallback(() => {
-    setShowParagraph((prevShowParagraph) => !prevShowParagraph);
-  }, []);
+    /*
+      클로저에 의해 allowToggle은 함수가 선언되었을 때 상태로 저장되어 다시 사용된다.
+      하지만, app이 allowToggle의 state 변화로 다시 실행될 때 react는 이 함수를 업데이트 시키지 않는다. (dependencies가 없기 때문)
+      이럴 경우, dependencies에 allowToggle을 추가한다.
+    */
+    if (allowToggle) {
+      setShowParagraph((prevShowParagraph) => !prevShowParagraph);
+    }
+  }, [allowToggle]);
+
+  const allowToggleHandler = () => {
+    setAllowToggle(true);
+  };
 
   return (
     <div className="app">
       <h1>Hi there!</h1>
-      <DemoOutput show={false} />
+      <DemoOutput show={showParagraph} />
+      <Button onClick={allowToggleHandler}>Toggle Paragraph!</Button>
       <Button onClick={toggleParagraphHandler}>Toggle Paragraph!</Button>
     </div>
   );
