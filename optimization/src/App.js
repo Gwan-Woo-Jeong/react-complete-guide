@@ -1,26 +1,24 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Button from "./components/UI/Button/Button";
 import "./App.css";
 import DemoOutput from "./components/Demo/DemoOutput";
 
 function App() {
-  // React re-evalutes its components only if there are changes in state, props or context.
   const [showParagraph, setShowParagraph] = useState(false);
 
   console.log("APP RUNNING");
 
-  const toggleParagraphHandler = () => {
-    setShowParagraph((prevShowParagraph) => !prevShowParagraph);
-  };
-  
-  // Real DOM re-renders if there is a change detected by React DOM
+  /*
+    useCallback : save function to reuse
 
-  /* 
-  Even if props does not change, DemoOut re-executed.
-  App return statement itself is a function.
-  So, whenever App function is called, those child components are re-executed.
-  The prop value does not even matter for this component to be executed again.
-   */
+    useCallback의 denpedencies 
+    빈 배열 : App이 처음 계산될 때의 그 상태에서 변하지 않음
+    dependecies가 있을 경우 : dependencies가 변하면, 함수를 새로 업데이트하여 저장한다.
+  */
+
+  const toggleParagraphHandler = useCallback(() => {
+    setShowParagraph((prevShowParagraph) => !prevShowParagraph);
+  }, []);
 
   return (
     <div className="app">
